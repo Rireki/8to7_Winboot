@@ -3,7 +3,7 @@ Changing Windows 8.x boot.wim to match Windows 7's UI.
 I created this because I'm lazy to do everything manually, so I extracted all the necessary files from Win7's boot.wim and uploaded it here.
 Then I wrote a cmd batch script with my minimal skills.
 # How to use
-- Download the repository, then place the extracted files on D:.
+- Download the repository, then place the extracted files on D:. Your D: should be filled with those 4 files.
 - Create a folder named "mount" without the brackets on D:.
 - Place Windows 8.x boot.wim on D:
 - Run SCRIPT.BAT, then after it's done, then run SCRIPT2.BAT.
