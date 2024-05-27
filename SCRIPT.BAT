@@ -36,62 +36,61 @@ ECHO Place everything in this folder to D: including this script
 ECHO Now we shall mount the wim image first.
 ECHO Press any key to continue, if the requirement is not fulfilled then please close this cmd window.
 pause >nul
-ver | findstr /il "6\.1\." > nul
-if %errorlevel% neq 0 (
-  echo Microsoft Windows 8.1/10/11 detected.
-  goto :Windows6
-)
+ver | findstr /il "5\.0" > nul
 if %errorlevel% equ 0 (
-  echo Microsoft Windows 7 [Version 6.1] detected.
-  set WindowsVersion=7
-  goto :Windows6
-)
-ver | findstr /il "6\.0\." > nul
-if %errorlevel% neq 0 (
-  echo Microsoft Windows 8.1/10/11 detected.
-  goto :Windows6
-)
-if %errorlevel% equ 0 (
-  echo Microsoft Windows Vista / Server 2008 [Version 6.0] detected.
-  goto :Windows6
-
-ver | findstr /il "5\.2\." > nul
-if %errorlevel% neq 0 (
-  echo Microsoft Windows 8.1/10/11 detected.
-  goto :Windows6
-)
-if %errorlevel% equ 0 (
-  echo Microsoft Windows Server 2003 [Version 5.2] detected.
+  echo Windows 2000 detected.
   set WindowsVersion=5
   goto :WindowsNT
 )
 ver | findstr /il "5\.1\." > nul
-if %errorlevel% neq 0 (
-  echo Microsoft Windows 8.1/10/11 detected.
-  goto :Windows6
-)
 if %errorlevel% equ 0 (
-  echo Microsoft Windows XP [Version 5.1] detected.
+  echo Windows XP detected.
   set WindowsVersion=5
   goto :WindowsNT
 )
-ver | findstr /il "5\.0" > nul
-if %errorlevel% neq 0 (
-  echo Microsoft Windows 8.1/10/11 detected.
-  goto :Windows6
-)
+ver | findstr /il "5\.2\." > nul
 if %errorlevel% equ 0 (
-  echo Microsoft Windows 2000 [Version 5.0] detected.
+  echo Windows Server 2003 detected.
   set WindowsVersion=5
   goto :WindowsNT
+)
+ver | findstr /il "6\.0\." > nul
+if %errorlevel% equ 0 (
+  echo Windows Vista detected.
+  set WindowsVersion=Vista
+  goto :WindowsElse
+)
+  ver | findstr /il "6\.1\." > nul
+  if %errorlevel% equ 0 (
+  echo Windows 7 detected.
+  set WindowsVersion=7
+  goto :WindowsElse
+)
+  ver | findstr /il "6\.2\." > nul
+  if %errorlevel% equ 0 (
+  echo Windows 8 detected.
+  set WindowsVersion=8
+  goto :WindowsElse
+)
+  ver | findstr /il "6\.3\." > nul
+  if %errorlevel% equ 0 (
+  echo Windows 8.1 etected.
+  set WindowsVersion=10
+  goto :WindowsElse
+)
+  ver | findstr /il "10\.0" > nul
+  if %errorlevel% equ 0 (
+  echo Windows 10/11 detected.
+  set WindowsVersion=10
+  goto :WindowsElse
 )
 
 :WindowsNT
 echo Windows 2000/XP/2003 is not supported.
-pause
+pause >nul
 exit
 
-:Windows6
+:WindowsElse
 d:
 mkdir mount
 dism /mount-wim /wimfile:d:\boot.wim /index:2 /mountdir:d:\mount
@@ -116,6 +115,6 @@ copy /y d:\ARUNIMG.dll D:\windows\winsxs\amd64_microsoft-windows-i..dia-branding
 copy /y d:\spwizimg.dll D:\windows\winsxs\amd64_microsoft-windows-i..dia-branding-client_31bf3856ad364e35_6.3.9600.16384_none_9c3ac73247f26d18
 echo ========================================
 ECHO Please start SCRIPT2 in order to commit changes to boot.wim
-ECHO Press any key to exit...
+ECHO Press any key to continue...
 pause >nul
 taskkill /f /im cmd.exe
