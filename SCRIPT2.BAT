@@ -1,4 +1,4 @@
-@echo off 
+@echo off
 
 :: BatchGotAdmin
 :-------------------------------------
@@ -28,75 +28,119 @@ if '%errorlevel%' NEQ '0' (
     pushd "%CD%"
     CD /D "%~dp0"
 :--------------------------------------
-
+:start
 @echo off
-
-echo Setup is detecting Windows version...
-ver | findstr /il "6\.1\." > nul
-if %errorlevel% neq 0 (
-  echo Microsoft Windows 8.1/10/11 detected.
-  goto :WindowsElse
-)
-if %errorlevel% equ 0 (
-  echo Microsoft Windows 7 [Version 6.1] detected.
-  set WindowsVersion=7
-  goto :Windows7
-)
 ver | findstr /il "6\.0\." > nul
-if %errorlevel% neq 0 (
-  echo Microsoft Windows 8.1/10/11 detected.
-  goto :WindowsElse
-)
 if %errorlevel% equ 0 (
-  echo Microsoft Windows Vista / Server 2008 [Version 6.0] detected.
-  set WindowsVersion=6
-  goto :Windows7
+  echo Windows Vista detected. Will be checking whether Windows ADK 8.1/10 is installed.
+  set WindowsVersion=Vista
+  goto :adkcheck
 )
-ver | findstr /il "5\.2\." > nul
-if %errorlevel% neq 0 (
-  echo Microsoft Windows 8.1/10/11 detected.
-  goto :WindowsElse
+  ver | findstr /il "6\.1\." > nul
+  echo Windows 7 detected. Will be checking whether Windows ADK 8.1/10 is installed.
+  if %errorlevel% equ 0 (
+  set WindowsVersion=7
+  goto :adkcheck
 )
+:adkcheck
+@echo off
+if exist "C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Deployment Tools\x86\DISM\dism.exe" (
+    echo Windows ADK 10 is installed. Will be using ADK 10 dism.exe instead...
+    goto :WindowsADK10
+)
+if exist "C:\Program Files (x86)\Windows Kits\8.1\Assessment and Deployment Kit\Deployment Tools\x86\DISM\dism.exe" (
+    goto :WindowsADK81
+    echo Windows ADK 8.1 is installed. Will be using ADK 8.1 dism.exe instead...
+) else (
+echo Windows ADK 8.1/10 is not detected. Will be using native dism.exe instead..
+)
+
+:next
+@echo off
+echo Setup is detecting Windows version...
+ver | findstr /il "5\.0" > nul
 if %errorlevel% equ 0 (
-  echo Microsoft Windows Server 2003 [Version 5.2] detected.
+  echo Windows 2000 detected.
   set WindowsVersion=5
   goto :WindowsNT
 )
 ver | findstr /il "5\.1\." > nul
-if %errorlevel% neq 0 (
-  echo Microsoft Windows 8.1/10/11 detected.
-  goto :WindowsElse
-)
 if %errorlevel% equ 0 (
-  echo Microsoft Windows XP [Version 5.1] detected.
+  echo Windows XP detected.
   set WindowsVersion=5
   goto :WindowsNT
 )
-ver | findstr /il "5\.0" > nul
-if %errorlevel% neq 0 (
-  echo Microsoft Windows 8.1/10/11 detected.
-  goto :WindowsElse
-)
+ver | findstr /il "5\.2\." > nul
 if %errorlevel% equ 0 (
-  echo Microsoft Windows 2000 [Version 5.0] detected.
+  echo Windows Server 2003 detected.
   set WindowsVersion=5
   goto :WindowsNT
 )
+ver | findstr /il "6\.0\." > nul
+if %errorlevel% equ 0 (
+  echo Windows Vista detected.
+  set WindowsVersion=Vista
+  goto :Windows7
+)
+  ver | findstr /il "6\.1\." > nul
+  if %errorlevel% equ 0 (
+  echo Windows 7 detected.
+  set WindowsVersion=7
+  goto :Windows7
+)
+  ver | findstr /il "6\.2\." > nul
+  if %errorlevel% equ 0 (
+  echo Windows 8 detected.
+  set WindowsVersion=8
+  goto :WindowsElse
+)
+  ver | findstr /il "6\.3\." > nul
+  if %errorlevel% equ 0 (
+  echo Windows 8.1 etected.
+  set WindowsVersion=10
+  goto :WindowsElse
+)
+  ver | findstr /il "10\.0" > nul
+  if %errorlevel% equ 0 (
+  echo Windows 10/11 detected.
+  set WindowsVersion=10
+  goto :WindowsElse
+)
+
 :WindowsNT
+@echo off
 echo Windows 2000/XP/2003 is not supported.
 echo Press any key to exit...
 pause >nul
 exit
 
 :Windows7
+@echo off
 dism /unmount-wim /mountdir:d:\mount /commit
 echo Press any key to exit...
 pause >nul
 exit
 
 :WindowsElse
+@echo off
 dism /unmount-image /mountdir:d:\mount /commit
 dism /cleanup-mountpoints
+echo Press any key to exit...
+pause >nul
+exit
+
+:WindowsADK81
+@echo off
+"C:\Program Files (x86)\Windows Kits\8.1\Assessment and Deployment Kit\Deployment Tools\x86\DISM\dism.exe" /unmount-image /mountdir:d:\mount /commit
+"C:\Program Files (x86)\Windows Kits\8.1\Assessment and Deployment Kit\Deployment Tools\x86\DISM\dism.exe" /cleanup-mountpoints
+echo Press any key to exit...
+pause >nul
+exit
+
+:WindowsADK10
+@echo off
+"C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Deployment Tools\x86\DISM\dism.exe" /unmount-image /mountdir:d:\mount /commit
+"C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Deployment Tools\x86\DISM\dism.exe" /cleanup-mountpoints
 echo Press any key to exit...
 pause >nul
 exit
