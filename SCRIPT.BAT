@@ -116,6 +116,6 @@ copy /y d:\ARUNIMG.dll D:\windows\winsxs\amd64_microsoft-windows-i..dia-branding
 copy /y d:\spwizimg.dll D:\windows\winsxs\amd64_microsoft-windows-i..dia-branding-client_31bf3856ad364e35_6.3.9600.16384_none_9c3ac73247f26d18
 echo ========================================
 ECHO Please start SCRIPT2 in order to commit changes to boot.wim
-ECHO Press any key to continue...
+ECHO Press any key to exit...
 pause >nul
 taskkill /f /im cmd.exe
