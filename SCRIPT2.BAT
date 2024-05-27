@@ -49,8 +49,8 @@ if exist "C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\D
     goto :WindowsADK10
 )
 if exist "C:\Program Files (x86)\Windows Kits\8.1\Assessment and Deployment Kit\Deployment Tools\x86\DISM\dism.exe" (
-    goto :WindowsADK81
     echo Windows ADK 8.1 is installed. Will be using ADK 8.1 dism.exe instead... >nul
+    goto :WindowsADK81
 ) else (
 echo Windows ADK 8.1/10 is not detected. Will be using native dism.exe instead.. >nul
 )
