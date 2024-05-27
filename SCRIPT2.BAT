@@ -32,27 +32,27 @@ if '%errorlevel%' NEQ '0' (
 @echo off
 ver | findstr /il "6\.0\." > nul
 if %errorlevel% equ 0 (
-  echo Windows Vista detected. Will be checking whether Windows ADK 8.1/10 is installed.
-  set WindowsVersion=Vista
+  echo Windows Vista detected. Will be checking whether Windows ADK 8.1/10 is installed. >nul
+  set WindowsVersion=6
   goto :adkcheck
 )
   ver | findstr /il "6\.1\." > nul
-  echo Windows 7 detected. Will be checking whether Windows ADK 8.1/10 is installed.
   if %errorlevel% equ 0 (
-  set WindowsVersion=7
+  echo Windows 7 detected. Will be checking whether Windows ADK 8.1/10 is installed. >nul
+  set WindowsVersion=6
   goto :adkcheck
 )
 :adkcheck
 @echo off
 if exist "C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Deployment Tools\x86\DISM\dism.exe" (
-    echo Windows ADK 10 is installed. Will be using ADK 10 dism.exe instead...
+    echo Windows ADK 10 is installed. Will be using ADK 10 dism.exe instead... >nul
     goto :WindowsADK10
 )
 if exist "C:\Program Files (x86)\Windows Kits\8.1\Assessment and Deployment Kit\Deployment Tools\x86\DISM\dism.exe" (
     goto :WindowsADK81
-    echo Windows ADK 8.1 is installed. Will be using ADK 8.1 dism.exe instead...
+    echo Windows ADK 8.1 is installed. Will be using ADK 8.1 dism.exe instead... >nul
 ) else (
-echo Windows ADK 8.1/10 is not detected. Will be using native dism.exe instead..
+echo Windows ADK 8.1/10 is not detected. Will be using native dism.exe instead.. >nul
 )
 
 :next
